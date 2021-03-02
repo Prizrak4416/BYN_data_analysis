@@ -2,13 +2,13 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from datetime import date
 from pathlib import Path
+import numpy as np
 
 
 def loadPrices(fileName):
     dat = pd.read_csv(fileName, index_col=0)
-    # dat = dat.set_index(pd.DatetimeIndex(dat['date']))
     dat.index = pd.DatetimeIndex(dat.index)
-    # dat = dat.drop('date', 1)
+    # dat['dat_int'] = np.array(list(range(1, len(dat) + 1))) / 10
     return dat
 
 
@@ -40,3 +40,12 @@ plt.legend(loc='upper left')
 
 plt.grid()
 plt.show()
+
+
+
+
+
+
+# import datetime as dt
+# data_df['Date'] = pd.to_datetime(data_df['Date'])
+# data_df['Date']=data_df['Date'].map(dt.datetime.toordinal)
