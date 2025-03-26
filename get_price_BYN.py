@@ -5,14 +5,16 @@ from datetime import date
 from pathlib import Path
 
 " USD Cur_ID = 145 ondate=2016-7-01"
-"https://www.nbrb.by/api/exrates/rates/145?ondate=2016-7-01"
+"https://api.nbrb.by/exrates/rates/145?ondate=2016-7-01"
 
 Cur_ID = 145
+date_slice = date.fromisoformat("2021-07-09")
+Cur_ID_New = 431
 
 
 # load json file with nbrb.by site
 def load_prices(val, filename):
-    url = 'https://www.nbrb.by/api/exrates/rates/{}?ondate={}'.format(val, filename)
+    url = 'https://api.nbrb.by/exrates/rates/{}?ondate={}'.format(val, filename)
     while True:
         try:
             dat = requests.get(url, timeout=5)
@@ -32,7 +34,9 @@ def make_calendar(start_date):
 def make_table(calMas):
     table = pd.DataFrame(columns=['price'])
     for i in calMas:
-        a = load_prices(Cur_ID, i)
+        date_with_cal = date.fromisoformat(str(i))
+        id_cours = Cur_ID_New if date_with_cal >= date_slice else Cur_ID
+        a = load_prices(id_cours, i)
         if a['Cur_OfficialRate'] > 100:
             table.loc[i] = [a['Cur_OfficialRate'] / 10000]
         else:
@@ -49,6 +53,7 @@ if Path(file_name).exists():
     date_start = table.index[-1]
     calendar_mas = make_calendar(date_start)
     print('calendar created')
+    print(calendar_mas)
     table_p = make_table(calendar_mas)
     table_price = pd.concat([table, table_p])
     print(table_price)

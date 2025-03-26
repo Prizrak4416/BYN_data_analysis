@@ -1,9 +1,12 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 from datetime import date
 from pathlib import Path
 import numpy as np
 
+
+matplotlib.use("TkAgg")
 
 def loadPrices(fileName):
     dat = pd.read_csv(fileName, index_col=0)
